@@ -1,0 +1,14 @@
+# Terraform state and local files
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+
+# Variables file with sensitive values
+terraform.tfvars
+
+# AWS credentials
+*.pem
+
+# OS files
+.DS_Store
