@@ -1,0 +1,4 @@
+aws_region       = "us-west-2"
+project_name     = "eda-infra"
+instance_type    = "t2.micro"
+allowed_ssh_cidr = "YOUR_IP_ADDRESS/32"
