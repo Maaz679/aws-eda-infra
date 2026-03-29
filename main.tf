@@ -132,6 +132,8 @@ data "aws_ami" "ubuntu" {
 }
 
 resource "aws_instance" "compute" {
+  user_data = file("user_data.sh")
+  iam_instance_profile = aws_iam_instance_profile.compute.name
   ami                    = data.aws_ami.ubuntu.id
   instance_type          = var.instance_type
   subnet_id              = aws_subnet.public.id
@@ -184,4 +186,56 @@ resource "aws_s3_bucket_public_access_block" "artifacts" {
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
+}
+
+# ---------------------------------------------------------------------------
+# IAM Role — Allows EC2 instance to write simulation results to S3
+# ---------------------------------------------------------------------------
+resource "aws_iam_role" "compute" {
+  name = "${var.project_name}-compute-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Name = "${var.project_name}-compute-role"
+  }
+}
+
+resource "aws_iam_role_policy" "s3_access" {
+  name = "${var.project_name}-s3-access"
+  role = aws_iam_role.compute.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:ListBucket"
+        ]
+        Resource = [
+          aws_s3_bucket.artifacts.arn,
+          "${aws_s3_bucket.artifacts.arn}/*"
+        ]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_instance_profile" "compute" {
+  name = "${var.project_name}-compute-profile"
+  role = aws_iam_role.compute.name
 }
