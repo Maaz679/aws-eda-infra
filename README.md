@@ -21,18 +21,18 @@ Built to demonstrate how infrastructure-as-code can automate the provisioning of
 |  |  | - Python 3     |  |  |                      | |
 |  |  | - AWS CLI      |  |  |                      | |
 |  |  +-------+--------+  |  |                      | |
-|  +----------|------------+  +----------------------+ |
+|  +----------|-----------+  +----------------------+ |
 |             |                                       |
-|  +----------v-----------+                            |
-|  |  Internet Gateway    |                            |
-|  +----------------------+                            |
+|  +----------v-----------+                           |
+|  |  Internet Gateway    |                           |
+|  +----------------------+                           |
 |                                                     |
-|  +----------------------+                            |
+|  +----------------------+                           |
 |  |  S3 Bucket           |   <-- simulation results  |
-|  |  (encrypted, version |       uploaded via IAM     |
-|  |   controlled, no     |       instance role        |
-|  |   public access)     |                            |
-|  +----------------------+                            |
+|  |  (encrypted, version |       uploaded via IAM    |
+|  |   controlled, no     |       instance role       |
+|  |   public access)     |                           |
+|  +----------------------+                           |
 +-----------------------------------------------------+
 ```
 
